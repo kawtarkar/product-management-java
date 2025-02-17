@@ -9,7 +9,7 @@
 package labs.pm.data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 
 /**
  * @author kawtar
@@ -27,7 +27,14 @@ public sealed abstract class Product implements Rateable<Product> permits Food,D
         this.price = price;
         this.rating = rating;
     }
-
+    @Override
+    public  boolean equals(Object o ){
+        if (this==o) return true;
+        if (o instanceof Product product){
+            return this.id==product.id;
+        }
+        return false;
+    }
 
 
     public abstract Product applyRating(Rating newRating) ;

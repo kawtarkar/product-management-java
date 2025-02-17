@@ -42,6 +42,16 @@ public class ProductManager {
         products.putIfAbsent(product,new ArrayList<>());
         return  product;
     }
+    public Product findProduct (int id){
+        Product result = null;
+        for(Product product:products.keySet()){
+            if(product.getId()==id){
+                result=product;
+                break;
+            }
+        }
+        return product;
+    }
 
     public Product reviewProduct (Product product, Rating rating, String comments){
         List<Review> reviews=products.get(product);
@@ -56,6 +66,10 @@ public class ProductManager {
         return product;
 
     }
+    public Product reviewProduct (int productId, Rating rating, String comments){
+        return reviewProduct(findProduct(productId),rating,comments);
+
+    }
     public ProductManager (Locale locale) {
 
         this.locale = locale;
@@ -63,8 +77,12 @@ public class ProductManager {
         dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).localizedBy(locale);
         moneyFormat = NumberFormat.getCurrencyInstance(locale);
     }
+    public void printProductReport (int productId){
+        printProductReport(findProduct(productId));
+    }
     public void printProductReport (Product product) {
         List<Review> reviews = products.get(product);
+        Collections.sort(reviews);
         StringBuilder txt = new StringBuilder ();
         String type = (product instanceof Food) ?
                     resources.getString ("food") : resources.getString ("drink");
