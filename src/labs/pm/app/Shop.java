@@ -13,14 +13,13 @@ public class Shop {
 
         ProductManager pm = new ProductManager(Locale.UK) ;
         Product p1 = pm.creatProduct( 101, "Tea", BigDecimal.valueOf (1.99), Rating.NOT_RATED, null) ;
-        pm.printProductReport (p1) ;
-        p1 = pm.reviewProduct (p1, Rating.FOUR_STAR, "Nice hot cup of tea") ;
-        p1 = pm.reviewProduct (p1, Rating.TWO_STAR, "Rather weak tea") ;
-        p1 = pm.reviewProduct (p1, Rating.FOUR_STAR, "Fine tea") ;
-        p1 = pm.reviewProduct (p1, Rating.FOUR_STAR, "Good tea");
-        p1 = pm.reviewProduct (p1, Rating.FIVE_STAR, "Perfect tea");
-        p1 = pm.reviewProduct (p1, Rating.THREE_STAR, "Just add some lemon") ;
-        pm.printProductReport (p1);
-
+        pm.printProductReport (101) ;
+        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Nice hot cup of tea") ;
+        p1 = pm.reviewProduct (101, Rating.TWO_STAR, "Rather weak tea") ;
+        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Fine tea") ;
+        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Good tea");
+        p1 = pm.reviewProduct (101, Rating.FIVE_STAR, "Perfect tea");
+        p1 = pm.reviewProduct (101, Rating.THREE_STAR, "Just add some lemon") ;
+        pm.printProductReport (101);
         }
     }

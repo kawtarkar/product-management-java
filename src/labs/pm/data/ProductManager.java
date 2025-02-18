@@ -50,7 +50,7 @@ public class ProductManager {
                 break;
             }
         }
-        return product;
+        return result;
     }
 
     public Product reviewProduct (Product product, Rating rating, String comments){
