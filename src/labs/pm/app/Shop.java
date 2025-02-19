@@ -11,7 +11,7 @@ import java.util.Locale;
 public class Shop {
     public static void main(String[] args) {
 
-        ProductManager pm = new ProductManager(Locale.UK) ;
+        ProductManager pm = new ProductManager("ru-RU") ;
         Product p1 = pm.creatProduct( 101, "Tea", BigDecimal.valueOf (1.99), Rating.NOT_RATED, null) ;
         pm.printProductReport (101) ;
         p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Nice hot cup of tea") ;
