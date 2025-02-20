@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class Shop {
@@ -27,6 +28,9 @@ public class Shop {
 //        p1 = pm.reviewProduct (101, Rating.FIVE_STAR, "Perfect tea");
 //        p1 = pm.reviewProduct (101, Rating.THREE_STAR, "Just add some lemon") ;
 //        pm.printProductReport (101);
-        pm.printProducts((px,py)->py.getRating().ordinal()-px.getRating().ordinal());
+        Comparator<Product> ratingSorter = (px, py)->py.getRating().ordinal()-px.getRating().ordinal();
+        Comparator<Product> priceSorter =(px,py)->py.getPrice().compareTo(px.getPrice());
+        pm.printProducts(ratingSorter.thenComparing(priceSorter));
+        pm.printProducts(ratingSorter.thenComparing(priceSorter).reversed());
         }
     }
