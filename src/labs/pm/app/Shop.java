@@ -30,7 +30,8 @@ public class Shop {
 //        pm.printProductReport (101);
         Comparator<Product> ratingSorter = (px, py)->py.getRating().ordinal()-px.getRating().ordinal();
         Comparator<Product> priceSorter =(px,py)->py.getPrice().compareTo(px.getPrice());
-        pm.printProducts(ratingSorter.thenComparing(priceSorter));
-        pm.printProducts(ratingSorter.thenComparing(priceSorter).reversed());
+//        pm.printProducts(ratingSorter.thenComparing(priceSorter));
+//        pm.printProducts(ratingSorter.thenComparing(priceSorter).reversed());
+        pm.printProducts( (px, py)->py.getRating().ordinal()-px.getRating().ordinal(),p->p.getPrice().floatValue()>2);
         }
     }
