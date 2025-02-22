@@ -117,7 +117,7 @@ public class ProductManager {
                 .stream()
                 .sorted(sorted)
                 .filter(filter)
-                .forEach(p->txt.append(formatter.formatProduct(p)));
+                .forEach(p->txt.append(formatter.formatProduct(p)+'\n'));
 //        for (Product product : productList) {
 //            txt.append(formatter.formatProduct(product));
 //            txt.append('\n');
