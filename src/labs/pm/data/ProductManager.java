@@ -108,8 +108,6 @@ public class ProductManager {
             System.out.println(txt);
     }
     public void printProducts(Comparator<Product> sorted, Predicate<Product> filter){
-//        List<Product> productList = new ArrayList<>(products.keySet());
-//       productList.sort(sorted);
 
         StringBuilder txt = new StringBuilder();
 
@@ -118,14 +116,18 @@ public class ProductManager {
                 .sorted(sorted)
                 .filter(filter)
                 .forEach(p->txt.append(formatter.formatProduct(p)+'\n'));
-//        for (Product product : productList) {
-//            txt.append(formatter.formatProduct(product));
-//            txt.append('\n');
-//
-//        }
+
         System.out.println(txt);
     }
-
+//    public Map <String,String> getDiscount(){
+//        return products.keySet()
+//                .stream()
+//                .collect(
+//                        Collectors.groupingBy(
+//                                product->product.getRating().getStars()),
+//                        Collectors.summarizingDouble(product->product.getDiscount().doubleValue),
+//                        discount->formatter.moneyFormat.format(discount));
+//    }
 
     private static class ResourceFormatter{
         private Locale locale;
