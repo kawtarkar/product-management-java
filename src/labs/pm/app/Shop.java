@@ -21,13 +21,14 @@ public class Shop {
         Product p3 = pm.creatProduct( 103, "fish", BigDecimal.valueOf (70), Rating.NOT_RATED, LocalDate.of(2027,10,20)) ;
         p3 = pm.reviewProduct (103, Rating.THREE_STAR, "Just add some lemon") ;
         Product p4 = pm.creatProduct( 104, "potato", BigDecimal.valueOf (20), Rating.NOT_RATED, LocalDate.of(2027,10,10)) ;
+        pm.printProductReport (19);
+        pm.reviewProduct (19, Rating.THREE_STAR, "Just add some lemon") ;
 
-//        p1 = pm.reviewProduct (101, Rating.TWO_STAR, "Rather weak tea") ;
-//        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Fine tea") ;
-//        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Good tea");
-//        p1 = pm.reviewProduct (101, Rating.FIVE_STAR, "Perfect tea");
-//        p1 = pm.reviewProduct (101, Rating.THREE_STAR, "Just add some lemon") ;
-//        pm.printProductReport (101);
+        p1 = pm.reviewProduct (101, Rating.TWO_STAR, "Rather weak tea") ;
+        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Fine tea") ;
+        p1 = pm.reviewProduct (101, Rating.FOUR_STAR, "Good tea");
+        p1 = pm.reviewProduct (101, Rating.FIVE_STAR, "Perfect tea");
+        pm.printProductReport (101);
         Comparator<Product> ratingSorter = (px, py)->py.getRating().ordinal()-px.getRating().ordinal();
         Comparator<Product> priceSorter =(px,py)->py.getPrice().compareTo(px.getPrice());
 //        pm.printProducts(ratingSorter.thenComparing(priceSorter));

@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +34,7 @@ public class ProductManager {
                     "fr-FR", new ResourceFormatter (Locale.FRANCE) ,
                     "zh-CN", new ResourceFormatter (Locale.CHINA) ) ;
 
-
+    private static final Logger logger = Logger.getLogger(ProductManager.class.getName());
     private Map<Product, List<Review>> products= new HashMap<>();
 
     public ProductManager (String languageTag) {
@@ -61,11 +63,12 @@ public class ProductManager {
         products.putIfAbsent(product,new ArrayList<>());
         return  product;
     }
-    public Product findProduct (int id){
-        return products.keySet()
-                .stream()
-                .filter(p->p.getId()==id)
-                .findFirst().orElseGet(null);
+    public Product findProduct(int id) throws ProductManagerException{
+
+            return products.keySet()
+                    .stream()
+                    .filter(p -> p.getId() == id)
+                    .findFirst().orElseThrow(()->new ProductManagerException("Product with id"+id+"not found"));
 
     }
 
@@ -82,12 +85,22 @@ public class ProductManager {
 
     }
     public Product reviewProduct (int productId, Rating rating, String comments){
-        return reviewProduct(findProduct(productId),rating,comments);
+        try {
+            return reviewProduct(findProduct(productId),rating,comments);
+        } catch (ProductManagerException e) {
+            logger.log(Level.INFO, e.getMessage());
+            return null;
+        }
 
     }
 
-    public void printProductReport (int productId){
-        printProductReport(findProduct(productId));
+    public void printProductReport (int productId) {
+        try {
+            printProductReport(findProduct(productId));
+        } catch (ProductManagerException e) {
+            logger.log(Level.INFO,e.getMessage());
+
+        }
     }
     public void printProductReport (Product product) {
         List<Review> reviews = products.get(product);
