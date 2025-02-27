@@ -124,7 +124,7 @@ public class ProductManager {
         List<Review> reviews = products.get(product);
         Collections.sort(reviews);
         Path productFile = reportsFolder.resolve(MessageFormat.format(config.getString("report.file"),product.getId()));
-
+        Files.createDirectories(productFile.getParent());
         try(PrintWriter out = new PrintWriter(
                 new OutputStreamWriter(
                         Files.newOutputStream(productFile, StandardOpenOption.CREATE),"UTF-8"))) {
