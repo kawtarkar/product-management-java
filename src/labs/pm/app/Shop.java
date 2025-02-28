@@ -18,11 +18,11 @@ public class Shop {
         ProductManager pm = new ProductManager("en-GB") ;
 //        pm.creatProduct( 101, "Tea", BigDecimal.valueOf (1.99), Rating.NOT_RATED, null) ;
 //        pm.printProductReport(101);
-        pm.parseProduct("D,101,Tea,1.99,0,2021-10-4");
-        pm.parseReview("101,4,Nice cup of tea ");
-        pm.parseReview("101,2,Bad tea ");
-        pm.parseReview("101,3,Not too bad ");
-        pm.parseReview("101,4,Fantastic tea  ");
+//        pm.parseProduct("D,101,Tea,1.99,0,2021-10-4");
+//        pm.parseReview("101,4,Nice cup of tea ");
+//        pm.parseReview("101,2,Bad tea ");
+//        pm.parseReview("101,3,Not too bad ");
+//        pm.parseReview("101,4,Fantastic tea  ");
         pm.printProductReport(101);
 
 

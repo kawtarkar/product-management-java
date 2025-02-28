@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -54,9 +55,11 @@ public class ProductManager {
 
     public ProductManager (String languageTag) {
         changeLocale (languageTag) ;
+        loadAllData();
     }
     public ProductManager (Locale locale) {
         this(locale.getLanguage());
+
     }
     public void changeLocale (String languageTag) {
         formatter = formatters.getOrDefault (languageTag, formatters.
@@ -165,17 +168,22 @@ public class ProductManager {
 
         System.out.println(txt);
     }
-    public void parseReview  (String text) {
+    private Review parseReview(String text) {
+        Review review = null;
         try {
             Object [] values =reviewFormat.parse(text);
-            reviewProduct(Integer.parseInt((String)values[0]),
-                    Rateable.convert(Integer.parseInt((String)values[1])), (String)values[2]);
+            review = new Review(Rateable.convert(Integer.parseInt((String)values[0])), (String)values[1]);
+
+//            reviewProduct(Integer.parseInt((String)values[0]),
+//                    Rateable.convert(Integer.parseInt((String)values[1])), (String)values[2]);
         } catch (ParseException | NumberFormatException e) {
             logger.log(Level.WARNING,"Error parsing review"+text,e);
 
         }
+        return  review;
     }
-    public void parseProduct(String text){
+    private Product parseProduct(String text){
+        Product product = null;
         try {
             Object [] values =productFormat.parse(text);
             int id = Integer.parseInt((String)values[1]);
@@ -184,11 +192,13 @@ public class ProductManager {
             Rating rating = Rateable.convert(Integer.parseInt((String)values[4]));
             switch ((String)values[0]){
                 case "D":
-                    creatProduct(id,name,price,rating);
+                    product= new Drink(id,name,price,rating);
+//                    creatProduct(id,name,price,rating);
                     break;
                 case "F":
                     LocalDate bestBefore = LocalDate.parse((String)values[5]);
-                    creatProduct(id,name,price,rating,bestBefore);
+                    product= new Food(id,name,price,rating,bestBefore);
+//                    creatProduct(id,name,price,rating,bestBefore);
                     break;
             }
 
@@ -196,7 +206,51 @@ public class ProductManager {
             logger.log(Level.WARNING,"Error parsing product "
                     +"text"+ e.getMessage());
         }
+        return product;
+    }
 
+    private List<Review> loadReviews (Product product){
+        List<Review> reviews = null;
+        Path file = dataFolder.resolve(
+                MessageFormat.format(
+                        config.getString("reviews.data.file"),product.getId()));
+        if (Files.notExists(file)) {
+            reviews = new ArrayList<> ();
+        }else{
+            try {
+                reviews = Files.lines (file, Charset.forName ("UTF-8") )
+                        .map (text -> parseReview (text) )
+                        . filter (review -> review != null)
+                        . collect (Collectors.toList ()) ;
+            } catch (IOException e) {
+                logger.log(Level.WARNING,"Error loading reviews " + e.getMessage());
+            }
+
+        }
+        return reviews;
+
+    }
+    private Product loadProduct (Path file){
+        Product product = null ;
+        try {
+            product = parseProduct(Files.lines(dataFolder.resolve(file),
+                    Charset.forName ("UTF-8")).findFirst().orElseThrow());
+        } catch (IOException e) {
+            logger.log(Level.WARNING,"Error loading product " + e.getMessage());
+        }
+        return product;
+    }
+
+    private void loadAllData(){
+        try {
+            products= Files.list(dataFolder)
+                    .filter(f->f.getFileName().toString().startsWith("product"))
+                    .map(file->loadProduct(file))
+                    .filter(product1 -> product !=null)
+                    .collect(Collectors.toMap(product->product,product->loadReviews(product)));
+        } catch (IOException e) {
+            logger.log(Level.WARNING,"Error loading data " + e.getMessage());
+        }
     }
 //    public Map <String,String> getDiscount(){
 //        return products.keySet()
