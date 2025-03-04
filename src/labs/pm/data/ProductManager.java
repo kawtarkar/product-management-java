@@ -8,9 +8,7 @@
 
 package labs.pm.data;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -19,6 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -98,7 +97,7 @@ public class ProductManager {
         product=product.applyRating(
                 Rateable.convert(
                 (int)Math.round(
-                reviews.stream().mapToInt(r->r.getRating().ordinal()).average().orElse(0))));
+                reviews.stream().mapToInt(r->r.rating().ordinal()).average().orElse(0))));
         products.put(product,reviews);
         return product;
 
@@ -251,6 +250,40 @@ public class ProductManager {
             logger.log(Level.WARNING,"Error loading data " + e.getMessage());
         }
     }
+    private void dumpData(){
+        try{
+            if(Files.notExists(tempFolder)){
+                Files.createDirectory(tempFolder);
+            }
+            Path tempFile = tempFolder.resolve(
+                    MessageFormat.format(config.getString("temp.file"), "hh"));
+            try (ObjectOutputStream out = new ObjectOutputStream(
+                    Files.newOutputStream(tempFile,StandardOpenOption.CREATE))){
+                out.writeObject(products);
+                products = new HashMap<>();
+            }
+
+        }catch(IOException e ){
+            logger.log(Level.SEVERE,"Error dumping data " + e.getMessage());
+        }
+    }
+    @SuppressWarnings("unchecked")
+    private void restoreData(){
+        try{
+            Path tempFile = Files.list(tempFolder)
+                    .filter(path->path.getFileName().toString().endsWith("tmp"))
+                    .findFirst().orElseThrow();
+            try (ObjectInputStream in = new ObjectInputStream(
+                    Files.newInputStream(tempFile,StandardOpenOption.DELETE_ON_CLOSE))){
+                products = (HashMap)in.readObject();
+
+            }
+
+        }catch(IOException | ClassNotFoundException e ){
+            logger.log(Level.SEVERE,"Error restoring data " + e.getMessage());
+        }
+    }
+
 //    public Map <String,String> getDiscount(){
 //        return products.keySet()
 //                .stream()
@@ -284,8 +317,8 @@ public class ProductManager {
         }
         private String formatReview(Review review){
             return MessageFormat.format (resources.getString ("review"),
-                    review.getRating().getStars(),
-                    review.getComments() );
+                    review.rating().getStars(),
+                    review.comments() );
         }
         private String getText (String key) {
             return resources.getString (key) ;

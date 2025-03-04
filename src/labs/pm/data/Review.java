@@ -8,33 +8,35 @@
 
 package labs.pm.data;
 
+import java.io.Serializable;
+
 /**
  * @author kawtar
  **/
-public class Review implements Comparable<Review>{
-    private Rating rating;
-    private String comments;
-
-    public Review(Rating rating, String comments) {
-        this.rating = rating;
-        this.comments = comments;
-    }
-
-    @Override
-    public String toString() {
-        return "Rating {" + "rating=" + rating + ", comments=" + comments + "}";
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public String getComments() {
-        return comments;
-    }
+public record Review (Rating rating, String comments) implements Comparable<Review> , Serializable {
+//    private Rating rating;
+//    private String comments;
+//
+//    public Review(Rating rating, String comments) {
+//        this.rating = rating;
+//        this.comments = comments;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Rating {" + "rating=" + rating + ", comments=" + comments + "}";
+//    }
+//
+//    public Rating getRating() {
+//        return rating;
+//    }
+//
+//    public String getComments() {
+//        return comments;
+//    }
 
     @Override
     public int compareTo(Review other) {
-        return other.getRating().ordinal()-this.getRating().ordinal();
+        return other.rating().ordinal()-this.rating().ordinal();
     }
 }
