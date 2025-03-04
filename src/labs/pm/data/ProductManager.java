@@ -127,7 +127,6 @@ public class ProductManager {
         List<Review> reviews = products.get(product);
         Collections.sort(reviews);
         Path productFile = reportsFolder.resolve(MessageFormat.format(config.getString("report.file"),product.getId()));
-        Files.createDirectories(productFile.getParent());
         try(PrintWriter out = new PrintWriter(
                 new OutputStreamWriter(
                         Files.newOutputStream(productFile, StandardOpenOption.CREATE),"UTF-8"))) {
@@ -246,7 +245,7 @@ public class ProductManager {
             products= Files.list(dataFolder)
                     .filter(f->f.getFileName().toString().startsWith("product"))
                     .map(file->loadProduct(file))
-                    .filter(product1 -> product !=null)
+                    .filter(product -> product !=null)
                     .collect(Collectors.toMap(product->product,product->loadReviews(product)));
         } catch (IOException e) {
             logger.log(Level.WARNING,"Error loading data " + e.getMessage());
