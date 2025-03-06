@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class ProductManager {
     private Product product;
     private Review review;
-    private ResourceFormatter formatter;
+//    private ResourceFormatter formatter;
     private static Map<String, ResourceFormatter> formatters =
             Map.of ("en-GB", new ResourceFormatter(Locale.UK) ,
                     "en-US", new ResourceFormatter(Locale.US) ,
@@ -51,17 +51,20 @@ public class ProductManager {
     private Path reportsFolder = Path.of(config.getString("reports.folder"));
     private Path dataFolder = Path.of(config.getString("data.folder"));
     private Path tempFolder = Path.of(config.getString("temp.folder"));
+    private  static final  ProductManager pm = new ProductManager();
 
-    public ProductManager (String languageTag) {
-        changeLocale (languageTag) ;
+    private ProductManager () {
+//        changeLocale (languageTag) ;
         loadAllData();
     }
-    public ProductManager (Locale locale) {
-        this(locale.getLanguage());
-
+    public static ProductManager getInstance(){
+        return pm;
     }
-    public void changeLocale (String languageTag) {
-        formatter = formatters.getOrDefault (languageTag, formatters.
+//    public ProductManager (Locale locale) {
+//        this(locale.getLanguage());
+//    }
+    public ResourceFormatter changeLocale (String languageTag) {
+        return formatters.getOrDefault (languageTag, formatters.
                 get ("en-GB") ) ;
     }
     public static Set<String> getSupportedLocales () {
@@ -112,9 +115,9 @@ public class ProductManager {
 
     }
 
-    public void printProductReport (int productId) {
+    public void printProductReport (int productId ,String languageTag) {
         try {
-            printProductReport(findProduct(productId));
+            printProductReport(findProduct(productId), languageTag);
         } catch (ProductManagerException e) {
             logger.log(Level.INFO,e.getMessage());
 
@@ -122,7 +125,8 @@ public class ProductManager {
             logger.log(Level.SEVERE,"Error printing product report "+e.getMessage(),e);
         }
     }
-    public void printProductReport (Product product) throws IOException {
+    public void printProductReport (Product product, String languageTag) throws IOException {
+        ResourceFormatter formatter= changeLocale(languageTag);
         List<Review> reviews = products.get(product);
         Collections.sort(reviews);
         Path productFile = reportsFolder.resolve(MessageFormat.format(config.getString("report.file"),product.getId()));
@@ -140,21 +144,9 @@ public class ProductManager {
             }
         }
 
-//        StringBuilder txt = new StringBuilder ();
-//        txt.append(formatter.formatProduct(product));
-//        txt.append('\n');
-//        if(reviews.isEmpty()){
-//            txt.append(formatter.getText("no.reviews")+'\n');
-//        }
-//        else{
-//            txt.append(reviews.stream()
-//                    .map(r->formatter.formatReview(r)+'\n')
-//                    .collect(Collectors.joining()));
-//        }
-//
-//            System.out.println(txt);
     }
-    public void printProducts(Comparator<Product> sorted, Predicate<Product> filter){
+    public void printProducts(Comparator<Product> sorted, Predicate<Product> filter ,String languageTag){
+        ResourceFormatter formatter= changeLocale(languageTag);
 
         StringBuilder txt = new StringBuilder();
 
@@ -284,7 +276,8 @@ public class ProductManager {
         }
     }
 
-//    public Map <String,String> getDiscount(){
+//    public Map <String,String> getDiscount(String languageTag){
+//    ResourceFormatter formatter= changeLocale(languageTag);
 //        return products.keySet()
 //                .stream()
 //                .collect(

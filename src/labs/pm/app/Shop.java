@@ -15,14 +15,14 @@ import java.util.Locale;
 
 public class Shop {
     public static void main(String[] args) {
-
-        ProductManager pm = new ProductManager("en-GB") ;
-        pm.printProductReport(101);
-        pm.creatProduct( 102, "honey", BigDecimal.valueOf (1.99), Rating.NOT_RATED, null) ;
-        pm.reviewProduct (102, Rating.TWO_STAR, "Rather weak tea") ;
-        pm.reviewProduct (102, Rating.FOUR_STAR, "Fine tea") ;
-        pm.reviewProduct (102, Rating.FOUR_STAR, "Good tea");
-        pm.reviewProduct (102, Rating.FIVE_STAR, "Perfect tea");
+        ProductManager pm = ProductManager.getInstance();
+//        ProductManager pm = new ProductManager("en-GB") ;
+//        pm.printProductReport(101);
+//        pm.creatProduct( 102, "honey", BigDecimal.valueOf (1.99), Rating.NOT_RATED, null) ;
+//        pm.reviewProduct (102, Rating.TWO_STAR, "Rather weak tea") ;
+//        pm.reviewProduct (102, Rating.FOUR_STAR, "Fine tea") ;
+//        pm.reviewProduct (102, Rating.FOUR_STAR, "Good tea");
+//        pm.reviewProduct (102, Rating.FIVE_STAR, "Perfect tea");
 
 //        pm.parseProduct("D,101,Tea,1.99,0,2021-10-4");
 //        pm.parseReview("101,4,Nice cup of tea ");
@@ -30,11 +30,11 @@ public class Shop {
 //        pm.parseReview("101,3,Not too bad ");
 //        pm.parseReview("101,4,Fantastic tea  ");
 
-        pm.printProductReport(101);
-        pm.printProducts( (px, py)->
-                py.getRating().ordinal()-px.getRating().ordinal(),p->p.getPrice().floatValue()<2);
-
-
+//        pm.printProductReport(101);
+//        pm.printProducts( (px, py)->
+//                py.getRating().ordinal()-px.getRating().ordinal(),p->p.getPrice().floatValue()<2);
+//
+//
 
 
 
